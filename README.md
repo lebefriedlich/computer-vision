@@ -27,7 +27,7 @@ Silakan unduh dataset LION dari Zenodo melalui tautan berikut:
 
 🔗 [https://zenodo.org/record/8249845](https://zenodo.org/record/8249845)
 
-Setelah diunduh, ekstrak ke dalam direktori `data/lion_dataset/`.
+Setelah diunduh, ekstrak ke dalam direktori `data/`.
 
 ## 🔧 Instalasi
 
