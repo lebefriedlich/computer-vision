@@ -1,0 +1,24 @@
+# Folder dataset
+data/
+
+# Folder output
+output/
+
+# Cache Python secara umum
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Cache di dalam src dan subfoldernya
+src/**/__pycache__/
+
+# Cache di dalam utils dan subfoldernya
+src/utils/**/__pycache__/
+
+# Checkpoint Jupyter Notebook
+.ipynb_checkpoints/
+
+# File sistem/editor
+.DS_Store
+*.swp
+*.swo
