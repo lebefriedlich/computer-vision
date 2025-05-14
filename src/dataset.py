@@ -112,4 +112,3 @@ if __name__ == '__main__':
     base = Path("data/lines")
     ld = LineCharacterDataset(base, DatasetMode.TRAIN, None, None, 0, BaseEncoder())
     data = ld.__getitem__(0)
-    print(data["transcription"], data["transcription_plaintxt"])

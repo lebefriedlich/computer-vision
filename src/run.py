@@ -105,9 +105,8 @@ class Runner:
                 lineImage = data["image"].to(self.config.device)
                 transcriptionLengths = torch.tensor(data["t_len"], dtype=torch.long).to(self.config.device)
 
-                transcriptionTensor = data["transcription"].to(self.config.device)  # shape: [B, max_len]
+                transcriptionTensor = data["transcription"].to(self.config.device)
 
-                # Potong dan flatten sesuai panjang aslinya
                 encodedTranscription = torch.cat([
                     transcriptionTensor[i, :transcriptionLengths[i]]
                     for i in range(transcriptionTensor.size(0))
@@ -141,8 +140,6 @@ class Runner:
                     self.optimiser.zero_grad()
 
                 batchLosses.append(loss.item())
-                if epoch == 1 and batchLosses[-1] == 0.0:
-                    self.infoLogger.info(f"{batchLosses[-1]}, {plaintextTranscription}")
 
             meanBatchLoss = np.mean(batchLosses)
             logger.info(f"{epoch},{meanBatchLoss}")
@@ -194,18 +191,16 @@ class Runner:
             transcriptionTensor = data["transcription"].to(self.config.device)
             target_lengths = torch.as_tensor(data["t_len"], dtype=torch.long, device=self.config.device)
 
-            # 🔧 Periksa panjang maksimum untuk menghindari slicing error
             max_label_len = transcriptionTensor.size(1)
             safe_target_lengths = torch.clamp(target_lengths, max=max_label_len)
 
-            # 🔧 Flatten label sesuai panjang aman
             encodedTranscription = torch.cat([
                 transcriptionTensor[i, :safe_target_lengths[i]]
                 for i in range(transcriptionTensor.size(0))
             ])
 
             predicted = self.model(lineImage).log_softmax(2)
-            predicted = predicted.permute(1, 0, 2)  # (T, N, C)
+            predicted = predicted.permute(1, 0, 2)
 
             input_lengths = torch.full(
                 size=(predicted.shape[1],),
@@ -214,7 +209,6 @@ class Runner:
                 device=self.config.device
             )
 
-            # ✅ Validasi panjang sebelum dihitung loss
             assert encodedTranscription.size(0) == safe_target_lengths.sum().item(), \
                 f"Mismatch: encodedTranscription={encodedTranscription.size(0)}, target_sum={safe_target_lengths.sum().item()}"
 
@@ -288,7 +282,7 @@ class Runner:
 if __name__ == '__main__':
     import warnings
 
-    warnings.filterwarnings("ignore")  # turn off pytorch user warnings for now
+    warnings.filterwarnings("ignore")
 
     torch.backends.cudnn.benchmark = True
     argParser = ArgumentParser()
