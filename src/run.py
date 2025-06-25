@@ -256,7 +256,8 @@ class Runner:
 
                 results = self.decode(predicted)
 
-                for idx, greedy in enumerate(results):
+                for idx in range(min(len(results), len(plaintextTranscription))):
+                    greedy = results[idx]
                     encodedTranscription = self.transcriptionEncoder.replace(plaintextTranscription[idx])
                     greedyPredictions.append(greedy)
                     originalExpectations.append(plaintextTranscription[idx])
